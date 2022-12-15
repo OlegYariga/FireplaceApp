@@ -10,24 +10,65 @@ import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        start_button.setOnClickListener(this)
-        stop_button.setOnClickListener(this)
+        setUpTabBar()
+//
+//        start_button.setOnClickListener(this)
+//        stop_button.setOnClickListener(this)
+//
+//        radioGroup.setOnCheckedChangeListener(
+//            RadioGroup.OnCheckedChangeListener {group, checkedId ->
+//                val radio: RadioButton = findViewById(checkedId)
+//                when (radio) {
+//                    radioButton3 -> {
+//                        fire_view.changeColour(0)
+//                    }
+//
+//                    radioButton4 -> {
+//                        fire_view.changeColour(1)
+//                    }
+//
+//                    radioButton5 -> {
+//                        fire_view.changeColour(2)
+//                    }
+//                }
+//            })
 
-        radioGroup.setOnCheckedChangeListener(
-            RadioGroup.OnCheckedChangeListener {group, checkedId ->
-                if (checkedId == 2131296744) fire_view.changeColour(0)
-                if (checkedId == 2131296745) fire_view.changeColour(1)
-                if (checkedId == 2131296746) fire_view.changeColour(2)
-            })
+    }
 
+    private fun setUpTabBar() {
+        val adapter = TabPageAdapter(this, tabLayout.tabCount)
+        adapter.createFragment(0)
+        viewPager.adapter = adapter
+
+        viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback()
+        {
+            override fun onPageSelected(position: Int) {
+                tabLayout.selectTab(tabLayout.getTabAt(position))
+            }
+        })
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener
+        {
+            override fun onTabSelected(tab: TabLayout.Tab)
+            {
+                viewPager.currentItem = tab.position
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
     }
 
     override fun onClick(v: View?) {

@@ -120,15 +120,15 @@ class FireView : View {
         0xFF034553.toInt(),
         0xFF03abcf.toInt(),
         0xFF037187.toInt(),
-        0xFF084a86.toInt(),
+        0xFF013873.toInt(),
         0xFF02294c.toInt(),
         0xFF021b31.toInt(),
-        0xFF047eed.toInt(),
-        0xFF047eed.toInt(),
+        0xFF021a57.toInt(),
+        0xFF02206b.toInt(),
         0xFF002343.toInt(),
         0
     )
-
+    private var isActive = false
     private var mFireColors = mFireColorsRed
 
     private val mHandler = Handler(Looper.getMainLooper(), Handler.Callback {
@@ -195,6 +195,7 @@ class FireView : View {
 
     fun startFire() {
         for (i in 0 until RENDER_WIDTH) {
+            isActive = true
             mPixels[i] = mFireColors[0]
         }
         mHandler.removeCallbacksAndMessages(null)
@@ -203,6 +204,10 @@ class FireView : View {
 
     fun changeColour(i: Int){
         this.init()
+
+        if (isActive) startFire()
+        else stopFire()
+
         if (i==0){
             this.mFireColors = mFireColorsRed
         }else if (i == 1) {
@@ -214,6 +219,7 @@ class FireView : View {
 
     fun stopFire() {
         for (i in 0 until RENDER_WIDTH) {
+            isActive = false
             mPixels[i] = 0
         }
     }

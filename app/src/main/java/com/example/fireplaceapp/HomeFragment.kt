@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
 
@@ -29,9 +30,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val btn_start = view.findViewById(R.id.start_button) as Button
         btn_start.setOnClickListener(this)
-
-        val btn_stop = view.findViewById(R.id.stop_button) as Button
-        btn_stop.setOnClickListener(this)
 
         val rd_group = view.findViewById(R.id.radioGroup) as RadioGroup
         rd_group.setOnCheckedChangeListener(
@@ -58,8 +56,21 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         if (v == null) return
         when (v.id) {
-            R.id.start_button -> fire_view.startFire()
-            R.id.stop_button -> fire_view.stopFire()
+            R.id.start_button -> {
+                if (start_button.text == "Start"){
+                    start_button.text = "Starting..."
+                    start_button.setBackgroundColor(getResources().getColor(R.color.Red))
+
+                    fire_view.startFire()
+                    start_button.text = "Stop"
+                }else{
+                    start_button.text = "Stopping..."
+                    start_button.setBackgroundColor(getResources().getColor(R.color.Green))
+
+                    fire_view.stopFire()
+                    start_button.text = "Start"
+                }
+            }
         }
     }
 }

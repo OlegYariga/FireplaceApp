@@ -1,14 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ScheduleFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
+        <NumberPicker
+            android:id="@+id/timePicker1"
+            android:layout_width="80dp"
+            android:layout_height="104dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="4dp"
+            android:timePickerMode="spinner"
+
+            app:layout_constraintStart_toStartOf="@+id/textView12"
+            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+        <NumberPicker
+            android:id="@+id/timePicker2"
+            android:layout_width="76dp"
+            android:layout_height="104dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="116dp"
+            android:layout_marginTop="4dp"
+            android:timePickerMode="spinner"
+            app:layout_constraintStart_toStartOf="@+id/textView12"
+            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="64dp"
+            android:text="Включить через:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="38dp"
+            android:layout_height="29dp"
+            android:text="Ч"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@+id/timePicker1"
+            app:layout_constraintStart_toEndOf="@+id/timePicker1" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="38dp"
+            android:layout_height="29dp"
+            android:text="М"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@+id/timePicker2"
+            app:layout_constraintStart_toEndOf="@+id/timePicker2" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Отключить через:"
+            app:layout_constraintStart_toStartOf="@+id/timePicker1"
+            app:layout_constraintTop_toBottomOf="@+id/timePicker1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

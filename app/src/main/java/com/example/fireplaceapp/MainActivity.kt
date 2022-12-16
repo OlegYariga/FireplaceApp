@@ -16,34 +16,12 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         setUpTabBar()
-//
-//        start_button.setOnClickListener(this)
-//        stop_button.setOnClickListener(this)
-//
-//        radioGroup.setOnCheckedChangeListener(
-//            RadioGroup.OnCheckedChangeListener {group, checkedId ->
-//                val radio: RadioButton = findViewById(checkedId)
-//                when (radio) {
-//                    radioButton3 -> {
-//                        fire_view.changeColour(0)
-//                    }
-//
-//                    radioButton4 -> {
-//                        fire_view.changeColour(1)
-//                    }
-//
-//                    radioButton5 -> {
-//                        fire_view.changeColour(2)
-//                    }
-//                }
-//            })
-
     }
 
     private fun setUpTabBar() {
@@ -69,14 +47,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
-    }
-
-    override fun onClick(v: View?) {
-        if (v == null) return
-        when (v.id) {
-            R.id.start_button -> fire_view.startFire()
-            R.id.stop_button -> fire_view.stopFire()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

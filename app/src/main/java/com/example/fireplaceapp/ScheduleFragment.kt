@@ -21,11 +21,19 @@ class ScheduleFragment : Fragment() {
         pickHour1.maxValue = 10
         pickHour1.minValue = 0
 
-        val pickHour2 = view.findViewById(R.id.timePicker2) as NumberPicker
-        pickHour2.maxValue = 59
-        pickHour2.minValue = 1
+        val pickMinute1 = view.findViewById(R.id.timePicker2) as NumberPicker
+        pickMinute1.maxValue = 59
+        pickMinute1.minValue = 1
+
+
+        val pickHour2 = view.findViewById(R.id.timePicker3) as NumberPicker
+        pickHour2.maxValue = 10
+        pickHour2.minValue = 0
+
+        val pickMinute2 = view.findViewById(R.id.timePicker4) as NumberPicker
+        pickMinute2.maxValue = 59
+        pickMinute2.minValue = 1
 
         return view
     }
-
 }

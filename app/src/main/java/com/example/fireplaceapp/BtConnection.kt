@@ -12,21 +12,41 @@ import java.io.PipedWriter
 import java.lang.reflect.Method
 import java.util.*
 
+// TODO: сюда положить сообщение от BT
+data class BtMessage(var text: String, var status_codes: Array<Int>){}
+
+// TODO: перенести сюдя коды ошибок
+class Constants{
+    companion object {
+        // Message types sent from the BluetoothChatService Handler
+        val MESSAGE_STATE_CHANGE = 1
+        val MESSAGE_READ = 2
+        val MESSAGE_WRITE = 3
+        val MESSAGE_DEVICE_NAME = 4
+        val MESSAGE_TOAST = 5
+        var MESSAGE_TYPE_SENT = 0
+        var MESSAGE_TYPE_RECEIVED = 1
+    }
+}
+
 
 class BtConnection(private val adapter: BluetoothAdapter) {
+    private var inited: Boolean = false
+
     /*
-    Return codes:
+        Return codes:
 
-    -20 = no device found with name "FireplaceDevice"
-    -30 = bluetooth adapter is disabled
-    --------------
-    -1 = can't connect to BT device
-    -2 = retry connections
-    1 = connecting to BT device
-    0 = connected to BT device
+        -20 = no device found with name "FireplaceDevice"
+        -30 = bluetooth adapter is disabled
+        --------------
+        -1 = can't connect to BT device
+        -2 = retry connections
+        1 = connecting to BT device
+        0 = connected to BT device
 
-    0 = connected
-     */
+        0 = connected
+
+    */
     lateinit var cThread: ConnectThread
     var connectionState: Int = 1 //default state - connecting
     var deviceBTAddress: String = ""
@@ -116,26 +136,24 @@ class BtConnection(private val adapter: BluetoothAdapter) {
             this.createCommunicationPipes()
             Log.e("test", "Create device thread.")
 
+            inited = true
             device.let {
-                cThread = ConnectThread(it, context, outputBluetoothReader!!, inputBluetoothWriter!!)
+                cThread = ConnectThread(it, context, outputBluetoothReader!!)
                 cThread.start()
+//                inputBluetoothReader = cThread.getReader()
             }
         }
 
-        var btMsg: String = ""
+        var btMsg: String = "notinited"
+        if (inited){
+            btMsg = cThread.receiveMessagesFromBT()
+        }
+
         try{
             Log.e("test", "Send message.")
             outputBluetoothWriter?.write(outputMessages) // TODO: передавать message
-
-            Log.e("test", "Read messages.") // TODO: дополнить
-            var i: Int? = inputBluetoothReader?.read()
-            Log.e("test", i.toString())
 //
-//            while (i != -1) {
-//                btMsg += i?.toChar()
-//                i = inputBluetoothReader?.read()
-//            }
-
+            Log.e("test", "Read messages.") // TODO: дополнить
             inputMessages = btMsg
 
         }catch (i: IOException){
@@ -143,9 +161,11 @@ class BtConnection(private val adapter: BluetoothAdapter) {
             return -1
         }
         outputMessages = ""
-        Log.i("test", inputMessages)
+
+        Log.i("test", "InputMessage = " + inputMessages + btMsg)
         inputMessages = ""
         connectionState = 0 // TODO: вычитывать статус из Pipe
+
         return connectionState
     }
 }

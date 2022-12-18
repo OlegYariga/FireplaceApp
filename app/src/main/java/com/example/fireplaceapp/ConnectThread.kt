@@ -8,11 +8,12 @@ import java.io.PipedReader
 import java.io.PipedWriter
 import java.util.*
 
-
+//TODO: использовать класс с описанием
+// + непонятный вылет на этапе подключения, продебажить
 @SuppressLint("MissingPermission")
 class ConnectThread(private val device: BluetoothDevice, val context: Context,
-                    private val outputBluetoothReader: PipedReader,
-                    private val inputBluetoothWriter: PipedWriter) : Thread() {
+                    private val outputBluetoothReader: PipedReader) : Thread() {
+    private var messagesString: String = ""
     val uuid = "00001101-0000-1000-8000-00805F9B34FB"
     var mSocket: BluetoothSocket? = null
     var connectingProcessState: Int = 1
@@ -20,6 +21,7 @@ class ConnectThread(private val device: BluetoothDevice, val context: Context,
     init {
         try {
             mSocket = device.createInsecureRfcommSocketToServiceRecord(UUID.fromString(uuid))
+
         }catch (i: IOException){
             connectingProcessState = -1
             Log.e("test","CANNOT CONNECT...")
@@ -48,26 +50,37 @@ class ConnectThread(private val device: BluetoothDevice, val context: Context,
         }
     }
 
+    private fun getTextFromAppLoopOrEmpty(): String {
+        var retStr: String = ""
+        while (outputBluetoothReader.ready()){
+            retStr += outputBluetoothReader.read().toChar()
+            Log.i("test", "FromAppLoop = " + retStr)
+        }
+
+        return retStr
+    }
+
+    private fun getTextFromBluetoothOrEmpty(): String {
+        var retStr: String = ""
+
+        // note: осторожно использовать, читает посимвольно и возвращает не всю строку сразу
+        while (mSocket?.inputStream?.available()!! > 0) {
+            retStr += mSocket?.inputStream?.read()?.toChar()
+            Log.i("test", "FromBluetooth = " + retStr)
+        }
+
+        return retStr
+    }
+
     fun sendRecieveLoop(){
         try {
             while (true) {
                 // read messages from app and write to BT thread
-                var i: Int = outputBluetoothReader.read()
-                while (i != -1) {
-                    connectingProcessState = 0
-                    mSocket?.outputStream?.write(i)
-                    i = outputBluetoothReader.read()
-                }
+                val appRes = this.getTextFromAppLoopOrEmpty()
+                mSocket?.outputStream?.write(appRes.toByteArray())
 
-                // read messages from BT and write to app thread
-                var y: Int? = mSocket?.inputStream?.read()
-                while (y != -1) {
-                    connectingProcessState = 0
-                    if (y != null) {
-                        inputBluetoothWriter.write(y)
-                    }
-                    y = mSocket?.inputStream?.read()
-                }
+                messagesString += this.getTextFromBluetoothOrEmpty()
+                connectingProcessState = 1
             }
 
         }catch (i: IOException) {
@@ -83,6 +96,7 @@ class ConnectThread(private val device: BluetoothDevice, val context: Context,
         this.sendRecieveLoop()
     }
 
+    // TODO: забирать текущее состояние коннекта
     fun getConnectionState(): Int {
         return connectingProcessState
     }
@@ -93,5 +107,11 @@ class ConnectThread(private val device: BluetoothDevice, val context: Context,
         }catch (i: IOException){
 
         }
+    }
+
+    fun receiveMessagesFromBT(): String {
+        val msg = messagesString
+        messagesString = ""
+        return msg
     }
 }

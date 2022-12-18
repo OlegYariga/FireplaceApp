@@ -1,14 +1,10 @@
 package com.example.fireplaceapp
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -102,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         {
             override fun onPageSelected(position: Int) {
                 // TODO: вынести это отсюда! Подключаться нужно при выполнении каких-то действий
-                var res: Int = btConnection.connect("00:11:22:33:FF:EE", applicationContext)
+                var res: Int = btConnection.communicate(applicationContext, "Message")
 
                 if (res == 1) {
                     Toast.makeText(applicationContext, "Подключаюсь к устройству. Ждите...", Toast.LENGTH_LONG).show()
